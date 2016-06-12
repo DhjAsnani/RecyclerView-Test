@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">RecyclesView</string>
+    <string-array name="countryName">
+        <item>India</item>
+        <item>Canada</item>
+        <item>USA</item>
+    </string-array>
+    <string-array name="capital">
+        <item>New Delhi</item>
+        <item>Ottawa</item>
+        <item>Washington DC</item>
+    </string-array>
+</resources>
