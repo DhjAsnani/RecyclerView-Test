@@ -14,6 +14,8 @@ import java.util.ArrayList;
  */
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.RecyclerViewHolder> {
     // declaring array list
+    private static final int TYPE_HEAD = 0;
+    private static final int TYPE_LIST = 1;
     ArrayList<ListProvider> arrayList = new ArrayList<ListProvider>();
 
     public RecyclerAdapter(ArrayList<ListProvider> arrayList)
@@ -24,41 +26,83 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
         RecyclerViewHolder recyclerViewHolder;
-        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_layout,parent,false);
-        recyclerViewHolder = new RecyclerViewHolder(view);
-        return recyclerViewHolder;
+        if(viewType == TYPE_LIST) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_layout, parent, false);
+            recyclerViewHolder = new RecyclerViewHolder(view, viewType);
+
+            return recyclerViewHolder;
+        }
+        else if(viewType==TYPE_HEAD)
+        {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.head_layout , parent, false);
+            recyclerViewHolder = new RecyclerViewHolder(view, viewType);
+
+            return recyclerViewHolder;
+        }
+        return null;
     }
 
     @Override
     public void onBindViewHolder(RecyclerViewHolder holder, int position) {
-
         ListProvider listProvider;
-        listProvider = arrayList.get(position);
-        holder.list_image.setImageResource(listProvider.getImage_id());
-        holder.list_country.setText(listProvider.getName());
-        holder.list_capital.setText(listProvider.getCapital());
+if(holder.view_type == TYPE_LIST)
+{
+    listProvider = arrayList.get(position-1);
+    holder.list_image.setImageResource(listProvider.getImage_id());
+    holder.list_country.setText(listProvider.getName());
+    holder.list_capital.setText(listProvider.getCapital());
+
+}
+        else if (holder.view_type==TYPE_HEAD)
+{
+    holder.title_flag.setText("FLAG");
+    holder.title_capital.setText("CAPITAL");
+    holder.title_country.setText("COUNTRY");
+}
+
+
     }
 
     @Override
     public int getItemCount() {
-        return arrayList.size();
+        return arrayList.size()+1;
     }
 
     public static class RecyclerViewHolder extends RecyclerView.ViewHolder
     {
+        int view_type;
         // for list
         ImageView list_image;
         TextView list_country,list_capital;
         //for header
         TextView title_flag,title_country,title_capital;
-        public RecyclerViewHolder(View view)
+        public RecyclerViewHolder(View view,int viewType)
         {
             super(view);
-            list_image = (ImageView) view.findViewById(R.id.flag_id);
-            list_capital= (TextView) view.findViewById(R.id.capitol_id);
-            list_country= (TextView) view.findViewById(R.id.country_id);
+            if(viewType == TYPE_LIST) {
+                list_image = (ImageView) view.findViewById(R.id.flag_id);
+                list_capital= (TextView) view.findViewById(R.id.capitol_id);
+                list_country= (TextView) view.findViewById(R.id.country_id);
+                view_type = 1;
+            }
+            else if(viewType==TYPE_HEAD)
+            {
+                title_flag = (TextView) view.findViewById(R.id.h_flag);
+                title_capital = (TextView) view.findViewById(R.id.h_capitol);
+                title_country= (TextView) view.findViewById(R.id.h_country);
+                view_type = 0;
+            }
+
 
         }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if(position==0)
+            return TYPE_HEAD;
+        return TYPE_LIST;
+
     }
 }
 
